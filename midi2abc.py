@@ -10,7 +10,7 @@ OUTDIR = "./NES_ABC"
 files = os.listdir(INDIR)
 outfiles = os.listdir(OUTDIR)
 
-for songfile in reversed(files):
+for songfile in files:
 
     songname = songfile.split(".")[0]
     fullpath = os.path.join(INDIR,songfile)
