@@ -87,7 +87,7 @@ def normalizeTracks(indir):
     # loop through all files
     for f in files:
 
-        fullpath = os.path.join(INDIR,f)
+        fullpath = os.path.join(indir,f)
 
         # try to remove redundant tracks
         try:
@@ -125,13 +125,13 @@ def extractKeys(indir):
             - "./NES_MIDI"
     """
 
-    files = os.listdir(INDIR)
+    files = os.listdir(indir)
     d = {}
     count = 0
 
     for f in files:
 
-        fullpath = os.path.join(INDIR,f)
+        fullpath = os.path.join(indir,f)
 
         songname = f.split(".")[0]
         abcname = songname + ".abc"
@@ -160,7 +160,8 @@ def extractKeys(indir):
             os.remove(fullpath)
 
     # write to json
-    with open("signatures.json","w") as f:
+    fn = os.path.join(indir,"signatures.json")
+    with open(fn,"w") as f:
         json.dump(d,f)
 
 def midi2abc(indir,outdir):
@@ -223,8 +224,6 @@ def jsonl(indir,keysjson):
     with open(keysjson,"r") as f:
         keys = json.load(f)
 
-    files = os.listdir(indir)
-
     completions = ""
     songnum = 0
 
@@ -233,29 +232,32 @@ def jsonl(indir,keysjson):
 
     for key in keys:
 
-        songs = keys[key]
+        try:
 
-        for song in songs:
+            songs = keys[key]
 
-            fn = os.path.join(indir,song)
+            for song in songs:
 
-            with open(fn,"r") as songfile:
+                fn = os.path.join(indir,song)
 
-                data = songfile.read()
+                with open(fn,"r") as songfile:
 
-                tokens = data.split(" ")
-                numtokens = len(tokens)
+                    data = songfile.read()
 
-                beginning = [data[:offset]]
+                    tokens = data.split(" ")
+                    numtokens = len(tokens)
 
-                # make sure our songs are of a decent length
-                if numtokens < 2048 and numtokens > 256:
+                    # make sure our songs are of a decent length
+                    if numtokens < 2048 and numtokens > 256:
 
-                    entry = {"prompt" : key,
-                        "completion" : " " + data[offset:]} # whitespace character helps training
+                        entry = {"prompt" : key,
+                            "completion" : " " + data[offset:]} # whitespace character helps training
 
-                    completions += json.dumps(entry) + "\n"
-                    songnum += 1
+                        completions += json.dumps(entry) + "\n"
+                        songnum += 1
+
+        except:
+            print("Song could not be found!")
 
     print(f"Completions file contains {songnum} songs!")
 

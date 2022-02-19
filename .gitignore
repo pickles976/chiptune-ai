@@ -1,5 +1,7 @@
 NES_ABC
 NES_MIDI
+GB_ABC
+GB_MIDI
 *.txt
 *.abc
 *.mid
