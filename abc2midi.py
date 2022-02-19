@@ -2,7 +2,7 @@ import subprocess
 from music21 import converter
 from mido import MidiFile
 
-infile = "1943-lev1.abc"
+infile = "2.abc"
 song = infile.split(".")[0]
 xml = song + ".xml"
 midiout = song + ".mid"

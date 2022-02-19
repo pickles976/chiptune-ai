@@ -15,7 +15,7 @@ for songfile in files:
     songname = songfile.split(".")[0]
     fullpath = os.path.join(INDIR,songfile)
     abcname = songname + ".abc"
-    
+
     if abcname not in outfiles:
 
         try:

@@ -7,7 +7,10 @@ files = os.listdir(INDIR)
 
 print(f"There are {len(files)} files!")
 
-completions = []
+completions = ""
+songnum = 0
+
+offset = 33
 
 for f in files:
 
@@ -22,14 +25,21 @@ for f in files:
             tokens = data.split(" ")
             numtokens = len(tokens)
 
+            beginning = [data[:offset]]
+            # print(beginning)
+
             if numtokens < 2048:
 
-                entry = {"prompt" : f"{randint(0,1000):04d}",
-                    "completion" : data }
+                entry = {"prompt" : f"{randint(0,9999):04d}",
+                    "completion" : " " + data[offset:]} # whitespace character helps training
 
-                completions.append(entry)
+                completions += json.dumps(entry) + "\n"
+                songnum += 1
 
-print(f"Completions file contains {len(completions)} songs!")
+# need terminating character
+# completions += "[END]"
+ 
+print(f"Completions file contains {songnum} songs!")
 
-with open("completions.json","w") as f:
-    json.dump(completions,f)
+with open("completions.jsonl","w") as f:
+    f.write(completions)

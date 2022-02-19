@@ -1,2 +1,7 @@
 NES_ABC
 NES_MIDI
+*.txt
+*.abc
+*.mid
+*.xml
+*.jsonl
