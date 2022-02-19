@@ -9,6 +9,7 @@ import json
 import xml2abc
 from multiprocessing import Process
 import subprocess
+from random import randint
 
 # helper function for downloadMidis
 def download_file(outdir,url):
@@ -119,10 +120,12 @@ def normalizeTracks(indir):
             os.remove(fullpath)
             print("Failed to open file!")
 
-def extractKeys(indir):
+def extractKeys(indir,outdir):
     """ Extract the keys and save off to a json file w/ corresponding abc values
         indir (str): input directory
             - "./NES_MIDI"
+        outdir (str): output directory
+            - "./NES_ABC"
     """
 
     files = os.listdir(indir)
@@ -160,7 +163,7 @@ def extractKeys(indir):
             os.remove(fullpath)
 
     # write to json
-    fn = os.path.join(indir,"signatures.json")
+    fn = os.path.join(outdir,"signatures.json")
     with open(fn,"w") as f:
         json.dump(d,f)
 
@@ -210,19 +213,18 @@ def purgeXML(outdir):
             print(f"Removing file: {f}")
             os.remove(os.path.join(outdir,f))
 
-def jsonl(indir,keysjson):
+def jsonl(indir,outfile):
     """ Write out all .abc files to a jsonl for processing
 
         indir (str): the input directory of the abc files
             - "./NES_ABC"
         keysjson (str): the key signatures json file
             - "signatures.json"
+        outfile (str): output file for completions
+            - "NES_completions.jsonl"
     """
 
-    keys = {}
-
-    with open(keysjson,"r") as f:
-        keys = json.load(f)
+    files = os.listdir(indir)
 
     completions = ""
     songnum = 0
@@ -230,38 +232,34 @@ def jsonl(indir,keysjson):
     # offset removing boilerplate
     offset = 33
 
-    for key in keys:
+    for song in files:
+
+        fn = os.path.join(indir,song)
 
         try:
 
-            songs = keys[key]
+            with open(fn,"r") as songfile:
 
-            for song in songs:
+                data = songfile.read()
 
-                fn = os.path.join(indir,song)
+                tokens = data.split(" ")
+                numtokens = len(tokens)
 
-                with open(fn,"r") as songfile:
+                # make sure our songs are of a decent length
+                if numtokens < 2048 and numtokens > 256:
 
-                    data = songfile.read()
+                    entry = {"prompt" : f"{randint(0,99):02d}",
+                        "completion" : " " + data[offset:]} # whitespace character helps training
 
-                    tokens = data.split(" ")
-                    numtokens = len(tokens)
-
-                    # make sure our songs are of a decent length
-                    if numtokens < 2048 and numtokens > 256:
-
-                        entry = {"prompt" : key,
-                            "completion" : " " + data[offset:]} # whitespace character helps training
-
-                        completions += json.dumps(entry) + "\n"
-                        songnum += 1
+                    completions += json.dumps(entry) + "\n"
+                    songnum += 1
 
         except:
             print("Song could not be found!")
 
     print(f"Completions file contains {songnum} songs!")
 
-    with open("completions.jsonl","w") as f:
+    with open(outfile,"w") as f:
         f.write(completions)
 
 if __name__ == "__main__":

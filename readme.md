@@ -15,10 +15,6 @@ https://www.vgmusic.com/music/console/nintendo/nes/mariotheme.mid
     `
         python .\Utilities.py normalizeTracks [IN_DIR]
     `   
-    - Extract key signatures from songs     
-    `
-        python .\Utilities.py extractKeys [IN_DIR]
-    `
 4. Convert all of the midi -> XML -> abc files      
 `
     python .\Utilities.py midi2abc [IN_DIR] [OUT_DIR]
@@ -29,7 +25,7 @@ https://www.vgmusic.com/music/console/nintendo/nes/mariotheme.mid
 `   
 6. Run jsonl.py to create jsonl training file from abc files    
 `
-    python .\Utilities.py jsonl [IN_DIR] [JSON_FILE]
+    python .\Utilities.py jsonl [IN_DIR] [JSON_KEYS] [OUT_FILE]
 `
 
 ### Training

@@ -1,5 +1,7 @@
+import subprocess
 
-musicfile = "1.txt"
+
+musicfile = "4.txt"
 songname = musicfile.split(".")[0]
 out = songname + ".abc"
 

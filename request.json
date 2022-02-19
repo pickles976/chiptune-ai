@@ -1,10 +1,10 @@
 {
-    "prompt": "0001 ->",
-    "temperature": 0.95,
-    "max_tokens": 2046,
-    "model": "babbage:ft-personal-2022-02-19-02-53-25",
-    "top_p": 1,
-    "frequency_penalty": 0,
-    "presence_penalty": 0,
-    "stop": ["END"]
-  }
+  "prompt": "a minor",
+  "temperature": 0.95,
+  "max_tokens": 2046,
+  "model": "curie:ft-personal-2022-02-19-17-50-47",
+  "top_p": 1,
+  "frequency_penalty": 0,
+  "presence_penalty": 0,
+  "stop": ["END"]
+}
