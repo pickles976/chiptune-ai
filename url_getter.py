@@ -5,12 +5,14 @@ import re
 """
 
 BASE_URL = "https://www.vgmusic.com/music/console/nintendo/nes/"
+INPUT_FILE = "nes.txt"
+OUTPUT_FILE = "NES_URL.txt"
 
 results = []
 href = "<a[^>]+href=\"(.*?)\"[^>]*>(.*)?</a>"
 
 # open webpage
-with open("nes.txt","r") as myFile:
+with open(INPUT_FILE,"r") as myFile:
 
     # loop through the HTML 
     for line in myFile:
@@ -21,9 +23,7 @@ with open("nes.txt","r") as myFile:
             if len(spl) > 1 and spl[1] == "mid":
                 results.append(mid)
 
-outfile = "NES_URL.txt"
-
-with open(outfile,"w") as out:
+with open(OUTPUT_FILE,"w") as out:
 
     for url in results:
         out.write(BASE_URL + url + "\n")

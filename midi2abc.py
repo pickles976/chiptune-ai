@@ -23,11 +23,6 @@ for songfile in files:
 
             print(f"Converting {abcname}")
 
-            # remove annoying metadata
-            mid = MidiFile(fullpath,clip=True)
-            mid.tracks.remove(mid.tracks[0])
-            mid.save(fullpath)
-
             xmlname = songname + ".musicxml"
             xmlout = os.path.join(OUTDIR,xmlname)
 
@@ -41,6 +36,3 @@ for songfile in files:
         except:
             print("Conversion failed!")
             os.remove(fullpath)
-
-    # remove the midi file path
-    # os.remove(fullpath)
