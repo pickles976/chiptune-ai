@@ -2,6 +2,7 @@ from mido import MidiFile
 import os
 from music21 import converter
 import xml2abc
+from multiprocessing import Process
 import subprocess
 
 INDIR = "./NES_MIDI"
@@ -35,10 +36,11 @@ for songfile in files:
 
             command = ["python","xml2abc.py",xmlout,"-u","-o",OUTDIR]
 
-            process = subprocess.run(command)
+            process = subprocess.Popen(command)
 
         except:
             print("Conversion failed!")
+            os.remove(fullpath)
 
     # remove the midi file path
-    os.remove(fullpath)
+    # os.remove(fullpath)
