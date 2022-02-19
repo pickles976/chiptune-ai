@@ -26,9 +26,9 @@ for f in files:
             numtokens = len(tokens)
 
             beginning = [data[:offset]]
-            # print(beginning)
 
-            if numtokens < 2048:
+            # make sure our songs are of a decent length
+            if numtokens < 2048 and numtokens > 256:
 
                 entry = {"prompt" : f"{randint(0,9999):04d}",
                     "completion" : " " + data[offset:]} # whitespace character helps training

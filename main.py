@@ -1,5 +1,5 @@
 
-musicfile = "2.txt"
+musicfile = "3.txt"
 songname = musicfile.split(".")[0]
 out = songname + ".abc"
 

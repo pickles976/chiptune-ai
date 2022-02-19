@@ -10,7 +10,7 @@ OUTDIR = "./NES_ABC"
 files = os.listdir(INDIR)
 outfiles = os.listdir(OUTDIR)
 
-for songfile in files:
+for songfile in reversed(files):
 
     songname = songfile.split(".")[0]
     fullpath = os.path.join(INDIR,songfile)
@@ -19,6 +19,8 @@ for songfile in files:
     if abcname not in outfiles:
 
         try:
+
+            print(f"Converting {abcname}")
 
             # remove annoying metadata
             mid = MidiFile(fullpath,clip=True)
@@ -34,5 +36,9 @@ for songfile in files:
             command = ["python","xml2abc.py",xmlout,"-u","-o",OUTDIR]
 
             process = subprocess.run(command)
+
         except:
             print("Conversion failed!")
+
+    # remove the midi file path
+    os.remove(fullpath)
