@@ -1,4 +1,4 @@
-https://www.vgmusic.com/music/console/nintendo/nes/mariotheme.mid
+https://github.com/chrisdonahue/nesmdb#midi-format
 
 ### Getting the data
 
@@ -10,23 +10,30 @@ https://www.vgmusic.com/music/console/nintendo/nes/mariotheme.mid
 `
     python .\Utilities.py downloadMidis [OUT_DIR] [URLS_FILE]
 `   
-3. Run normalization steps:
+
+### Pre-Processing
+
+1. Run normalization steps:
     - Normalize the track numbers   
     `
         python .\Utilities.py normalizeTracks [IN_DIR]
     `   
-4. Convert all of the midi -> XML -> abc files      
-`
-    python .\Utilities.py midi2abc [IN_DIR] [OUT_DIR]
-`   
-5. Run purge.py to remove all of the XML files      
-`
-    python .\Utilities.py purgeXML [IN_DIR]
-`   
-6. Run jsonl.py to create jsonl training file from abc files    
-`
-    python .\Utilities.py jsonl [IN_DIR] [OUT_FILE]
-`
+2. Convert all of the midi -> XML -> abc files      
+    `
+        python .\Utilities.py midi2abc [IN_DIR] [OUT_DIR]
+    `   
+3. Run purge.py to remove all of the XML files      
+    `
+        python .\Utilities.py purgeXML [IN_DIR]
+    `   
+4. Run removetracks to remove all non-standardized tracks          
+    `   
+        python .\Utilities.py removeTracks [IN_DIR]
+    `
+5. Run jsonl.py to create jsonl training file from abc files    
+    `
+        python .\Utilities.py jsonl [IN_DIR] [OUT_FILE]
+    `
 
 ### Training
 
