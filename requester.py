@@ -7,57 +7,65 @@ import subprocess
 from music21 import converter
 from mido import MidiFile
 
-URL = "https://api.openai.com/v1/completions"
-TOKEN = "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"
+def requestMidi():
 
-songname = "new"
+    URL = "https://api.openai.com/v1/completions"
+    TOKEN = "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"
 
-KEY_FILE = "keys.json"
-REQ_FILE = "request.json"
-OUTDIR = "./"
-key_dict = {}
-request = {}
+    songname = f"{random.randint(0,9999):04d}"
 
-# get keys
-with open(KEY_FILE,"r") as f:
-    key_dict = json.load(f)
+    KEY_FILE = "keys.json"
+    REQ_FILE = "request.json"
+    OUTDIR = "./"
+    key_dict = {}
+    request = {}
 
-# load request file
-with open(REQ_FILE,"r") as f:
-    request = json.load(f)
+    try:
 
-# add key to request
-request["prompt"] = key_dict[str(randint(0,23))]
+        # get keys
+        with open(KEY_FILE,"r") as f:
+            key_dict = json.load(f)
 
-print("Sending Request to Server")
+        # load request file
+        with open(REQ_FILE,"r") as f:
+            request = json.load(f)
 
-r = requests.post(url=URL,json=request,headers={'Authorization': 'Bearer {}'.format(TOKEN)})
+        # add key to request
+        request["prompt"] = key_dict[str(randint(0,23))]
 
-print(f"Response: {r.status_code}")
+        print("Sending Request to Server")
 
-# load response into abc file format
-music = """X:1
-T:Music21 Fragment
-C:Music21\n"""
+        r = requests.post(url=URL,json=request,headers={'Authorization': 'Bearer {}'.format(TOKEN)})
 
-data = r.json()["choices"][0]["text"].split("\\n")
+        print(f"Response: {r.status_code}")
 
-for line in data:
-    music += line + "\n"
+        # load response into abc file format
+        music = """X:1
+        T:Music21 Fragment
+        C:Music21\n"""
 
-abcfile = songname + ".abc"
+        data = r.json()["choices"][0]["text"].split("\\n")
 
-with open(abcfile,"w") as f:
-    f.write(music)
+        for line in data:
+            music += line + "\n"
 
-# xml to midi pipeline
-xmlout = songname + ".xml"
-midiout = songname + ".mid"
+        abcfile = songname + ".abc"
 
-print(f"Converting {abcfile} to {xmlout}")
-command = ["python","abc2xml.py",abcfile,"-o",OUTDIR]
-process = subprocess.run(command)
+        with open(abcfile,"w") as f:
+            f.write(music)
 
-print("Converting xml to midi")
-midi = converter.parseFile(xmlout).write("midi",fp=midiout)
+        # xml to midi pipeline
+        xmlout = songname + ".xml"
+        midiout = songname + ".mid"
+
+        print(f"Converting {abcfile} to {xmlout}")
+        command = ["python","abc2xml.py",abcfile,"-o",OUTDIR]
+        process = subprocess.run(command)
+
+        print("Converting xml to midi")
+        midi = converter.parseFile(xmlout).write("midi",fp=midiout)
+        return midiout
+
+    except:
+        print("Failed!")
 
