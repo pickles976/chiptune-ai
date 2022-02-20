@@ -12,7 +12,7 @@ def requestMidi():
     URL = "https://api.openai.com/v1/completions"
     TOKEN = "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"
 
-    songname = f"{random.randint(0,9999):04d}"
+    songname = f"{randint(0,9999):04d}"
 
     KEY_FILE = "keys.json"
     REQ_FILE = "request.json"
@@ -64,7 +64,7 @@ def requestMidi():
 
         print("Converting xml to midi")
         midi = converter.parseFile(xmlout).write("midi",fp=midiout)
-        return midiout
+        return midi
 
     except:
         print("Failed!")
