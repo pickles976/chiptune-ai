@@ -281,6 +281,27 @@ def abc2midi(infile,outdir):
 
     midi = converter.parseFile(xml).write("midi",fp=midiout)
 
+def removeTracks(indir):
+
+    files = os.listdir(indir)
+
+    for fn in files:
+        if fn.split(".")[1] == "abc":
+            fullpath = os.path.join(indir,fn)
+            delete = False
+
+            with open(fullpath,"r") as f:
+
+                lines = f.readlines()
+                
+                if lines[3][8:13] != "1 2 3":
+                    delete = True
+
+            if delete:
+                print(f"Removing {fullpath}")
+                os.remove(fullpath)
+            
+
 if __name__ == "__main__":
     args=sys.argv
     globals()[args[1]](*args[2:])
