@@ -262,6 +262,25 @@ def jsonl(indir,outfile):
     with open(outfile,"w") as f:
         f.write(completions)
 
+
+def abc2midi(infile,outdir):
+    """ Utility to convert a single abc file to midi
+        
+        infile (str): input file name
+            - "new.abc"
+        outdir (str): output directory
+            - "./"
+    """
+
+    song = infile.split(".")[0]
+    xml = song + ".xml"
+    midiout = song + ".mid"
+
+    command = ["python","abc2xml.py",infile,"-o",outdir]
+    process = subprocess.run(command)
+
+    midi = converter.parseFile(xml).write("midi",fp=midiout)
+
 if __name__ == "__main__":
     args=sys.argv
     globals()[args[1]](*args[2:])

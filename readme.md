@@ -25,7 +25,7 @@ https://www.vgmusic.com/music/console/nintendo/nes/mariotheme.mid
 `   
 6. Run jsonl.py to create jsonl training file from abc files    
 `
-    python .\Utilities.py jsonl [IN_DIR] [JSON_KEYS] [OUT_FILE]
+    python .\Utilities.py jsonl [IN_DIR] [OUT_FILE]
 `
 
 ### Training

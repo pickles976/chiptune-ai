@@ -1,5 +1,5 @@
 {
-  "prompt": "a minor",
+  "prompt": "",
   "temperature": 0.95,
   "max_tokens": 2046,
   "model": "curie:ft-personal-2022-02-19-17-50-47",
