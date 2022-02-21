@@ -4,6 +4,8 @@ GB_ABC
 GB_MIDI
 SNES_ABC
 SNES_MIDI
+C64_ABC
+C64_MIDI
 test_songs
 *.txt
 *.abc

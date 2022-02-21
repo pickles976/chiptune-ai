@@ -1,5 +1,11 @@
 https://github.com/chrisdonahue/nesmdb#midi-format
 
+- GAN
+https://www.youtube.com/watch?v=T-MCludVNn4
+
+- MIDI2IMG
+https://github.com/mathigatti/midi2img
+
 ### Getting the data
 
 1. Run the utility to get the URLs      
@@ -41,4 +47,7 @@ https://github.com/chrisdonahue/nesmdb#midi-format
 `
     openai tools fine_tunes.prepare_data -f .\completions.jsonl 
 `
-2. Run the training
+2. Run the training     
+`
+    openai api fine_tunes.create -t .\completions_prepared.jsonl -m curie
+`
