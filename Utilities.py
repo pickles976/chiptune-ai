@@ -246,10 +246,10 @@ def jsonl(indir,outfile):
                 numtokens = len(tokens)
 
                 # make sure our songs are of a decent length
-                if numtokens < 1550 and numtokens > 256:
+                if numtokens < 1024 and numtokens > 256:
 
                     entry = {"prompt" : f"{randint(0,99):02d}",
-                        "completion" : " " + data[offset:]} # whitespace character helps training
+                        "completion" : " " + data[offset:] + " [END]"} # whitespace character helps training
 
                     completions += json.dumps(entry) + "\n"
                     songnum += 1

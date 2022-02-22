@@ -72,7 +72,7 @@ def requestMidi():
 def requestMidi2():
 
     URL = "https://api.openai.com/v1/completions"
-    TOKEN = "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"
+    TOKEN = "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"
 
     songname = f"{randint(0,9999):04d}"
 
