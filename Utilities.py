@@ -262,6 +262,42 @@ def jsonl(indir,outfile):
     with open(outfile,"w") as f:
         f.write(completions)
 
+def truncateMidis(indir,outdir):
+    """ Write out all .abc files to a jsonl for processing
+
+        indir (str): the input directory of the abc files
+            - "./NES_ABC"
+        keysjson (str): the key signatures json file
+            - "signatures.json"
+        outfile (str): output file for completions
+            - "NES_completions.jsonl"
+    """
+
+    files = os.listdir(indir)
+
+    for song in files:
+
+        fn = os.path.join(indir,song)
+
+        try:
+
+            with open(fn,"r") as songfile:
+
+                data = songfile.read()
+
+                tokens = data.split(" ")
+                numtokens = len(tokens)
+
+                # make sure our songs are of a decent length
+                if numtokens < 2048 and numtokens > 256:
+                    print("Song is within compatible length")
+                else:
+                    print("Song exceeds compatible length")
+                    songname = song.split(".")[0] + ".mid"
+                    os.remove(os.path.join(outdir,songname))
+
+        except:
+            print("Song could not be found!")
 
 def abc2midi(infile,outdir):
     """ Utility to convert a single abc file to midi
@@ -281,7 +317,7 @@ def abc2midi(infile,outdir):
 
     midi = converter.parseFile(xml).write("midi",fp=midiout)
 
-def removeTracks(indir):
+def removeTracks(indir,outdir):
 
     files = os.listdir(indir)
 
@@ -300,6 +336,8 @@ def removeTracks(indir):
             if delete:
                 print(f"Removing {fullpath}")
                 os.remove(fullpath)
+                songname = fn.split(".")[0]
+                os.remove(os.path.join(outdir,songname+".mid"))
             
 
 if __name__ == "__main__":

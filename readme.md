@@ -34,7 +34,7 @@ https://github.com/mathigatti/midi2img
     `   
 4. Run removetracks to remove all non-standardized tracks          
     `   
-        python .\Utilities.py removeTracks [IN_DIR]
+        python .\Utilities.py removeTracks [IN_DIR] [OUT_DIR]
     `
 5. Run jsonl.py to create jsonl training file from abc files    
     `
