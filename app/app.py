@@ -25,4 +25,12 @@ def lambda_handler(event,context):
     except:
         print("Song files were not present!")
 
-    return base64toString(midiData)
+    message = {
+   'message': 'Execution started successfully!'
+    }
+    
+    return {
+        'statusCode': 200,
+        'headers': {'Content-Type': 'application/json'},
+        'body': base64toString(midiData)
+    }
