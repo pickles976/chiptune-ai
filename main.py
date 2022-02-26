@@ -15,8 +15,6 @@ def base64toString(b):
 @cross_origin()
 def getMidi():
 
-    # midi = requestMidi()
-
     # midi = requestMidi2()
 
     midi = "4620.mid"
@@ -26,16 +24,24 @@ def getMidi():
     with open(midi,"rb") as f:
         midiData = f.read()
 
-    # os.remove(songname + ".abc")
-    # os.remove(songname + ".xml")
-    # os.remove(songname + ".mid")
-    # print(base64toString(midiData))
+    # remove the songs
+    try:
+        os.remove(songname + ".mid")
+        os.remove(songname + ".xml")
+        os.remove(songname + ".abc")
+    except:
+        print("Song files were not present!")
 
     return base64toString(midiData)
 
-    # return send_file(midi,mimetype='audio/mid',download_name=songname+".mid")
+# @app.route("/getMidiFile",methods=["GET"])
+# @cross_origin()
+# def getMidiFile():
 
-    # return send_file("7294.mid",mimetype='audio/mid')
+#     midi = requestMidi2()
+
+#     return send_file(midi,mimetype='audio/mid')
+#     return send_file("7294.mid",mimetype='audio/mid')
 
 if __name__ == '__main__':
    app.run(debug = True,host="0.0.0.0",port=5000)
