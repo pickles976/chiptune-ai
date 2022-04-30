@@ -8,13 +8,13 @@ from music21 import converter
 from mido import MidiFile
 from aitextgen import aitextgen
 
-def requestMidi3():
+def requestMidi(seed,keySignature="none"):
 
     PATH = "."
     songname = f"{randint(0,9999):04d}"
     OUTDIR = "."
 
-    prompt="""X:1
+    prompt=f"""X:1
     T:Music21 Fragment
     C:Music21
     %%score 1 2 3 4
@@ -22,7 +22,7 @@ def requestMidi3():
     Q:1/4=180
     M:4/4
     I:linebreak $
-    K:none
+    K:{keySignature}
     V:1 treble nm="Brass" snm="Brs"
     V:2 treble nm="Brass" snm="Brs"
     V:3 bass nm="Fretless Bass" snm="Gtr"
@@ -31,9 +31,10 @@ def requestMidi3():
 
     tokenizer = "/model/aitextgen.tokenizer.json"
     model_folder = "/model/MIDI_15"
-    ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer)
+    ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer,seed=seed)
 
     text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9)
+
     print(text,flush=True)
 
     abcfile = os.path.join(PATH,songname + ".abc")

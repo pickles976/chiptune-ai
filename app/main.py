@@ -1,4 +1,4 @@
-from requester import requestMidi3
+from requester import requestMidi
 from flask import Flask,redirect,request,send_file
 from flask_cors import CORS, cross_origin
 import io
@@ -12,13 +12,16 @@ app.config["CORS_HEADERS"] = "Content-Type"
 def base64toString(b):
     return base64.b64encode(b).decode("utf-8")
 
-@app.route("/getMidi",methods=["GET"])
+@app.route("/getMidi",methods=["POST"])
 @cross_origin()
 def getMidi():
 
-    app.logger.info("request received")
+    key = request.form["key"]
+    seed = int(request.form["seed"])
 
-    midi,songname = requestMidi3()
+    app.logger.info(f"request received; key: {key}, seed: {seed}")
+
+    midi,songname = requestMidi(seed,keySignature=key)
 
     midiData = None
 
