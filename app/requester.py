@@ -8,7 +8,7 @@ from music21 import converter
 from mido import MidiFile
 from aitextgen import aitextgen
 
-def requestMidi(seed,keySignature="none"):
+def requestMidi(seed):
 
     PATH = "."
     songname = f"{randint(0,9999):04d}"
@@ -22,7 +22,7 @@ def requestMidi(seed,keySignature="none"):
     Q:1/4=180
     M:4/4
     I:linebreak $
-    K:{keySignature}
+    K:none
     V:1 treble nm="Brass" snm="Brs"
     V:2 treble nm="Brass" snm="Brs"
     V:3 bass nm="Fretless Bass" snm="Gtr"

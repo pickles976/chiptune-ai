@@ -12,16 +12,18 @@ app.config["CORS_HEADERS"] = "Content-Type"
 def base64toString(b):
     return base64.b64encode(b).decode("utf-8")
 
+def stringtoBase64(s):
+    return base64.decodebytes(s.encode("utf-8"))
+
 @app.route("/getMidi",methods=["POST"])
 @cross_origin()
 def getMidi():
 
-    key = request.form["key"]
     seed = int(request.form["seed"])
 
-    app.logger.info(f"request received; key: {key}, seed: {seed}")
+    app.logger.info(f"request received; seed: {seed}")
 
-    midi,songname = requestMidi(seed,keySignature=key)
+    midi,songname = requestMidi(seed)
 
     midiData = None
 
@@ -45,6 +47,31 @@ def getMidi():
     #     },
     #     'body': base64toString(midiData)
     # }
+
+@app.route("/shuffleMidi",methods=["POST"])
+@cross_origin()
+def shuffleMidi():
+
+    seed = int(request.form["seed"])
+    midiString = request.form["midi"].split(",")[1] # remove prefixes
+    tracks = request.form["tracks"]
+
+    app.logger.info(f"request received; seed: {seed}, tracks: {tracks}")
+    app.logger.info(midiString)
+
+    newSong = "new.mid"
+
+    # write midi bytes to file
+    with open(newSong,"wb") as f:
+        f.write(stringtoBase64(midiString))
+
+    # use midi file to generate completions
+
+    # load midi file into memory
+    with open(newSong,"rb") as f:
+        midiData = f.read()
+
+    return base64toString(midiData)
 
 if __name__ == '__main__':
    app.run(debug = True,host="0.0.0.0",port=5000)
