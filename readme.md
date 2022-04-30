@@ -1,18 +1,17 @@
-https://github.com/chrisdonahue/nesmdb#midi-format
-
-- GAN
-https://www.youtube.com/watch?v=T-MCludVNn4
-
-- MIDI2IMG
-https://github.com/mathigatti/midi2img
-
 ### Getting the data
 
-1. Run the utility to get the URLs      
+1. Navigate to a page like:  
+`
+    http://www.vgmusic.com/music/console/nintendo/snes/  
+`  
+Copy the source HTML of the page to a file
+
+2. Run the utility to get the URLs from the HTML (could be automated, base URL is URL from previous step)
 ` 
     python .\Utilities.py getUrls [BASE_URL] [IN_FILE] [OUT_FILE]
 `   
-2. Run downloader.py to get all of the Midi files   
+
+3. Run downloader.py to get all of the Midi files   
 `
     python .\Utilities.py downloadMidis [OUT_DIR] [URLS_FILE]
 `   
@@ -32,22 +31,12 @@ https://github.com/mathigatti/midi2img
     `
         python .\Utilities.py purgeXML [IN_DIR]
     `   
-4. Run removetracks to remove all non-standardized tracks          
-    `   
-        python .\Utilities.py removeTracks [IN_DIR] [OUT_DIR]
+5. Upload folders to Google Drive and run the Colab to create datasets   
     `
-5. Run jsonl.py to create jsonl training file from abc files    
-    `
-        python .\Utilities.py jsonl [IN_DIR] [OUT_FILE]
-    `
+        https://colab.research.google.com/drive/1Qex7hxW-FCpxNJOZXUY0My83dqUHn7T3
+    `  
+    This step needs to be updated with a dedicated notebook
 
 ### Training
 
-1. Run this command to further prep the training file:     
-`
-    openai tools fine_tunes.prepare_data -f .\completions.jsonl 
-`
-2. Run the training     
-`
-    openai api fine_tunes.create -t .\completions_prepared.jsonl -m curie
-`
+https://colab.research.google.com/drive/1N8m1dL71Tj138g0NFbG32DcGLA9cYVoK

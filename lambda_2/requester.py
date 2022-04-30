@@ -6,11 +6,11 @@ import os
 import subprocess
 from music21 import converter
 from mido import MidiFile
-from aitextgen import aitextgen
+import sys
 
-def requestMidi3():
+def generateMidi():
 
-    PATH = "."
+    PATH = "/tmp/"
     songname = f"{randint(0,9999):04d}"
     OUTDIR = "."
 
@@ -31,10 +31,9 @@ def requestMidi3():
 
     tokenizer = "/model/aitextgen.tokenizer.json"
     model_folder = "/model/MIDI_15"
-    ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer)
+    ai = aitextgen(model_folder=".",tokenizer_file=tokenizer)
 
     text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9)
-    print(text,flush=True)
 
     abcfile = os.path.join(PATH,songname + ".abc")
 
@@ -56,4 +55,8 @@ def requestMidi3():
     print("Converting xml to midi")
     midi = converter.parseFile(xmlout).write("midi",fp=midiout)
     print(midi)
-    return midi,songname
+    return midi
+
+if __name__ == "__main__":
+    args=sys.argv
+    globals()[args[1]](*args[2:])

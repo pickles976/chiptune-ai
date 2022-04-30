@@ -10,7 +10,7 @@ def base64toString(b):
 
 def lambda_handler(event,context):
 
-    midi = requestMidi2()
+    midi = generateMidi()
     songname = midi.split(".")[0]
     midiData = None
 
@@ -31,6 +31,11 @@ def lambda_handler(event,context):
     
     return {
         'statusCode': 200,
-        'headers': {'Content-Type': 'application/json'},
+        'headers': {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'OPTIONS,POST,GET' 
+        },
         'body': base64toString(midiData)
     }

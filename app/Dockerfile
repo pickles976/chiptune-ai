@@ -1,15 +1,26 @@
-FROM public.ecr.aws/lambda/python:3.8
+# use this for CUDA 
+# FROM nvidia/cuda:11.2.0-runtime-ubuntu20.04
 
-# Copy function code
-COPY app.py ${LAMBDA_TASK_ROOT}
-COPY abc2xml.py ${LAMBDA_TASK_ROOT}
-COPY requester.py ${LAMBDA_TASK_ROOT}
+# RUN apt-get update && apt-get install -y software-properties-common gcc && \
+#     add-apt-repository -y ppa:deadsnakes/ppa
 
-# Install the function's dependencies using file requirements.txt
-# from your project folder.
+# RUN apt-get update && apt-get install -y python3.10 python3-distutils python3-pip python3-apt
 
-COPY requirements.txt  .
-RUN  pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
+FROM python:3.10-slim
 
-# Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
-CMD [ "app.lambda_handler" ] 
+EXPOSE 5000
+
+COPY ./requirements.txt ./requirements.txt
+
+RUN pip install --upgrade pip
+RUN pip3 install -r requirements.txt
+
+COPY ./abc2xml.py ./abc2xml.py
+COPY ./main.py ./main.py
+COPY ./requester.py ./requester.py
+
+COPY ./model/ ./model
+
+RUN pip install -q aitextgen --no-deps
+
+CMD ["python3","main.py"]

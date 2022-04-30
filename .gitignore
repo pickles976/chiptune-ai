@@ -6,9 +6,17 @@ SNES_ABC
 SNES_MIDI
 C64_ABC
 C64_MIDI
+N64_ABC
+N64_MIDI
+GBA_ABC
+GBA_MIDI
+LAKH_ABC
+LAKH_MIDI
 test_songs
 *.txt
 *.abc
 *.mid
 *.xml
 *.jsonl
+*.musicxml
+*.bin

@@ -9,7 +9,7 @@ import json
 import xml2abc
 from multiprocessing import Process
 import subprocess
-from random import randint
+from random import randint, random
 
 # helper function for downloadMidis
 def download_file(outdir,url):
@@ -110,11 +110,13 @@ def normalizeTracks(indir):
             for track in duplicates:
                 midi.tracks.remove(track)
 
-            # keep files with proper amount of tracks
-            if len(midi.tracks) <= 5 and len(midi.tracks) > 3:
-                midi.save(fullpath)
-            else:
-                os.remove(fullpath)
+            midi.save(fullpath)
+
+            # # keep files with proper amount of tracks
+            # if len(midi.tracks) <= 5 and len(midi.tracks) > 3:
+            #     midi.save(fullpath)
+            # else:
+            #     os.remove(fullpath)
 
         except:
             os.remove(fullpath)
@@ -200,7 +202,6 @@ def midi2abc(indir,outdir):
 
             except:
                 print("Conversion failed!")
-                os.remove(fullpath)
 
 def purgeXML(outdir):
     """ Remove all the xml artifacts
@@ -262,6 +263,51 @@ def jsonl(indir,outfile):
     with open(outfile,"w") as f:
         f.write(completions)
 
+def totxt(indir,outfile):
+    """ Write out all .abc files to a jsonl for processing
+
+        indir (str): the input directory of the abc files
+            - "./NES_ABC"
+        outfile (str): output file for completions
+            - "NES_completions.txt"
+    """
+
+    files = os.listdir(indir)
+    text = ""
+    songnum = 0
+
+    for song in files:
+
+        if song.split(".")[1] == "abc":
+            print(song)
+
+            fn = os.path.join(indir,song)
+
+            with open(fn,"r") as songfile:
+
+                data = songfile.read()
+
+                tokens = data.split(" ")
+                numtokens = len(tokens)
+
+                # # make sure our songs are of a decent length
+                # if numtokens < 1024 and numtokens > 128: 
+
+                text = data + "<|endoftext|>\n" # whitespace character helps training
+                songnum += 1
+
+                with open(outfile,"a") as f:
+                    # f.write(text)
+                    f.writelines(text)
+                    text = ""
+
+    print(f"Completions file contains {songnum} songs!")
+
+    # with open(outfile,"w") as f:
+    #     # f.write(text)
+    #     f.writelines(text)
+    #     text = ""
+
 def truncateMidis(indir,outdir):
     """ Write out all .abc files to a jsonl for processing
 
@@ -289,7 +335,7 @@ def truncateMidis(indir,outdir):
                 numtokens = len(tokens)
 
                 # make sure our songs are of a decent length
-                if numtokens < 2048 and numtokens > 256:
+                if numtokens < 16000 and numtokens > 256:
                     print("Song is within compatible length")
                 else:
                     print("Song exceeds compatible length")
@@ -338,7 +384,79 @@ def removeTracks(indir,outdir):
                 os.remove(fullpath)
                 songname = fn.split(".")[0]
                 os.remove(os.path.join(outdir,songname+".mid"))
-            
+
+# copy files from one directory to another
+def populateDirectory(indir,outdir):      
+
+    files = os.listdir(indir)
+    text = ""
+    songnum = 0
+
+    for song in files:
+
+        if song.split(".")[1] == "abc":
+            print(song)
+
+            outfile = os.path.join(outdir,song)
+            fn = os.path.join(indir,song)
+
+            with open(fn,"r") as songfile:
+
+                data = songfile.read()
+
+                tokens = data.split(" ")
+                numtokens = len(tokens)
+
+                # make sure our songs are of a decent length
+                if numtokens < 1024 and numtokens > 128: 
+
+                    songnum += 1
+
+                    with open(outfile,"w") as f:
+                        f.write(data)
+
+    print(f"Moved {songnum} songs!")
+
+# Create Train and Validation files
+def createDatasets(indir,outbase):
+
+    files = os.listdir(indir)
+    text = ""
+    songnum = 0
+    pct = 0.0
+
+    for song in files:
+
+        if song.split(".")[1] == "abc":
+            print(song)
+
+            fn = os.path.join(indir,song)
+
+            with open(fn,"r") as songfile:
+
+                data = songfile.read()
+
+                tokens = data.split(" ")
+                numtokens = len(tokens)
+
+                suffix = "eval"
+                if random() > pct:
+                    suffix = "train"
+
+                outfile = outbase + "_" + suffix + ".txt"
+
+                # make sure our songs are of a decent length
+                if numtokens < 4096 and numtokens > 256: 
+
+                    text = data + "<|endoftext|>\n" # whitespace character helps training
+                    songnum += 1
+
+                    with open(outfile,"a") as f:
+                        f.writelines(text)
+                        text = ""
+
+    print(f"Completions file contains {songnum} songs!")
+
 
 if __name__ == "__main__":
     args=sys.argv
