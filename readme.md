@@ -23,6 +23,8 @@ Copy the source HTML of the page to a file
     python .\Utilities.py downloadMidis [OUT_DIR] [URLS_FILE]
 `   
 
+(note: all of the data is already in /data_scraping)
+
 ### Pre-Processing
 
 1. Run normalization steps:
