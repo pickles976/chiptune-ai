@@ -33,9 +33,9 @@ def requestMidi(seed):
 
     tokenizer = "/model/aitextgen.tokenizer.json"
     model_folder = "/model/MIDI_15"
-    ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer,seed=seed)
+    ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer)
 
-    text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9)
+    text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9,seed=seed)
 
     print(text,flush=True)
 
@@ -100,8 +100,8 @@ def modifyMidi(seed,tracks,oldMidi):
 
     # print(prompt,flush=True)
 
-    ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer,seed=seed)
-    text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9)
+    ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer)
+    text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9,seed=seed)
 
     # print(text,flush=True)
 

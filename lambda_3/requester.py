@@ -7,6 +7,9 @@ import subprocess
 from music21 import converter
 from mido import MidiFile
 import sys
+from aitextgen import aitextgen
+
+channelMap = {0: "V:0", 1: "V:1", 2: "V:2", 3: "V:3",4: "V:4"}
 
 # the previous midi track is used as the new prompy
 def modifyMidi(seed,tracks,oldMidi):
@@ -15,9 +18,8 @@ def modifyMidi(seed,tracks,oldMidi):
     songname = f"{randint(0,9999):04d}"
     OUTDIR = "."
 
-    tokenizer = "/model/aitextgen.tokenizer.json"
-    model_folder = "/model/MIDI_15"
-
+    tokenizer = "./model/aitextgen.tokenizer.json"
+    model_folder = "./model/MIDI_15"
 
     songname = oldMidi.split(".")[0]
     xmlname = songname + ".musicxml"
@@ -47,8 +49,8 @@ def modifyMidi(seed,tracks,oldMidi):
 
     # print(prompt,flush=True)
 
-    ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer,seed=seed)
-    text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9)
+    ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer)
+    text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9,seed=seed)
 
     # print(text,flush=True)
 
@@ -67,7 +69,7 @@ def modifyMidi(seed,tracks,oldMidi):
     print("Converting xml to midi")
     midi = converter.parseFile(xmlout).write("midi",fp=midiout)
     print(midi)
-    return midi,songname
+    return midi
 
 if __name__ == "__main__":
     args=sys.argv

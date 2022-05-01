@@ -7,6 +7,7 @@ import subprocess
 from music21 import converter
 from mido import MidiFile
 import sys
+from aitextgen import aitextgen
 
 def requestMidi(seed):
 
@@ -29,11 +30,11 @@ def requestMidi(seed):
     V:4 bass nm="Percussion" snm="Perc"
     """
 
-    tokenizer = "/model/aitextgen.tokenizer.json"
-    model_folder = "/model/MIDI_15"
-    ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer,seed=seed)
+    tokenizer = "./model/aitextgen.tokenizer.json"
+    model_folder = "./model/MIDI_15"
+    ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer)
 
-    text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9)
+    text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9,seed=seed)
 
     print(text,flush=True)
 
@@ -57,7 +58,7 @@ def requestMidi(seed):
     print("Converting xml to midi")
     midi = converter.parseFile(xmlout).write("midi",fp=midiout)
     print(midi)
-    return midi,songname
+    return midi
 
 if __name__ == "__main__":
     args=sys.argv

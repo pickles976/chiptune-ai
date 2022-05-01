@@ -8,6 +8,9 @@ PATH = "/tmp/"
 def base64toString(b):
     return base64.b64encode(b).decode("utf-8")
 
+def stringtoBase64(s):
+    return base64.decodebytes(s.encode("utf-8"))
+
 def lambda_handler(event,context):
 
     seed = int(event["seed"])
