@@ -8,13 +8,13 @@ from music21 import converter
 from mido import MidiFile
 import sys
 
-def generateMidi():
+def requestMidi(seed):
 
     PATH = "/tmp/"
     songname = f"{randint(0,9999):04d}"
     OUTDIR = "."
 
-    prompt="""X:1
+    prompt=f"""X:1
     T:Music21 Fragment
     C:Music21
     %%score 1 2 3 4
@@ -31,9 +31,11 @@ def generateMidi():
 
     tokenizer = "/model/aitextgen.tokenizer.json"
     model_folder = "/model/MIDI_15"
-    ai = aitextgen(model_folder=".",tokenizer_file=tokenizer)
+    ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer,seed=seed)
 
     text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9)
+
+    print(text,flush=True)
 
     abcfile = os.path.join(PATH,songname + ".abc")
 
@@ -55,7 +57,7 @@ def generateMidi():
     print("Converting xml to midi")
     midi = converter.parseFile(xmlout).write("midi",fp=midiout)
     print(midi)
-    return midi
+    return midi,songname
 
 if __name__ == "__main__":
     args=sys.argv

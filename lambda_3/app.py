@@ -1,4 +1,4 @@
-from requester import requestMidi
+from requester import modifyMidi
 import io
 import os
 import base64
@@ -10,7 +10,17 @@ def base64toString(b):
 
 def lambda_handler(event,context):
 
-    midi = requestMidi(event["seed"])
+    seed = int(event["seed"])
+    midiString = event["midi"].split(",")[1] # remove prefixes
+    tracks = int(event["tracks"])
+
+    newSong = "new.mid"
+
+    # write midi bytes to file
+    with open(newSong,"wb") as f:
+        f.write(stringtoBase64(midiString))
+
+    midi = modifyMidi(seed,tracks,newSong)
     songname = midi.split(".")[0]
     midiData = None
 

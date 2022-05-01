@@ -1,0 +1,1 @@
+Lambda function for generating a new song from scratch

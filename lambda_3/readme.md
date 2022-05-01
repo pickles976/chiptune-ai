@@ -1,0 +1,1 @@
+Lambda function for getting new completions for a given song
