@@ -4,10 +4,19 @@ from flask_cors import CORS, cross_origin
 import io
 import os
 import base64
+from aitextgen import aitextgen
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
+
+# pre-load model
+tokenizer = "/model/aitextgen.tokenizer.json"
+model_folder = "/model/GPT_NEO"
+ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer,to_gpu=True)
+
+# remove forking
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 def base64toString(b):
     return base64.b64encode(b).decode("utf-8")
@@ -23,7 +32,7 @@ def getMidi():
 
     app.logger.info(f"request received; seed: {seed}")
 
-    midi,songname = requestMidi(seed)
+    midi,songname = requestMidi(ai,seed)
 
     midiData = None
 
@@ -36,18 +45,6 @@ def getMidi():
 
     return base64toString(midiData)
 
-    # info needed for lambda
-    # return {
-    #     'statusCode': 200,
-    #     'headers': {
-    #         'Content-Type': 'application/json',
-    #         'Access-Control-Allow-Headers': 'Content-Type',
-    #         'Access-Control-Allow-Origin': '*',
-    #         'Access-Control-Allow-Methods': 'OPTIONS,POST,GET' 
-    #     },
-    #     'body': base64toString(midiData)
-    # }
-
 @app.route("/shuffleMidi",methods=["POST"])
 @cross_origin()
 def shuffleMidi():
@@ -57,7 +54,7 @@ def shuffleMidi():
     tracks = int(request.form["tracks"])
 
     app.logger.info(f"request received; seed: {seed}, tracks: {tracks}")
-    app.logger.info(midiString)
+    # app.logger.info(midiString)
 
     newSong = "new.mid"
 
@@ -66,7 +63,7 @@ def shuffleMidi():
         f.write(stringtoBase64(midiString))
 
     # use midi file to generate completions
-    midi,songname = modifyMidi(seed,tracks,newSong)
+    midi,songname = modifyMidi(ai,seed,tracks,newSong)
 
     # load midi file into memory
     with open(newSong,"rb") as f:

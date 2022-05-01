@@ -7,10 +7,13 @@ import subprocess
 from music21 import converter
 from mido import MidiFile
 from aitextgen import aitextgen
+import time
 
 channelMap = {0: "V:0", 1: "V:1", 2: "V:2", 3: "V:3",4: "V:4"}
 
-def requestMidi(seed):
+def requestMidi(ai,seed):
+
+    start = time.time()
 
     PATH = "."
     songname = f"{randint(0,9999):04d}"
@@ -31,10 +34,6 @@ def requestMidi(seed):
     V:4 bass nm="Percussion" snm="Perc"
     """
 
-    tokenizer = "/model/aitextgen.tokenizer.json"
-    model_folder = "/model/MIDI_15"
-    ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer)
-
     text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9,seed=seed)
 
     print(text,flush=True)
@@ -50,7 +49,7 @@ def requestMidi(seed):
     midiout = os.path.join(PATH,songname + ".mid")
 
     print(f"Converting {abcfile} to {xmlout}")
-    command = ["python","abc2xml.py",abcfile,"-o",PATH]
+    command = ["python3","abc2xml.py",abcfile,"-o",PATH]
     process = subprocess.run(command)
 
     print(os.listdir())
@@ -59,17 +58,22 @@ def requestMidi(seed):
     print("Converting xml to midi")
     midi = converter.parseFile(xmlout).write("midi",fp=midiout)
     print(midi)
+
+    print(f"{time.time() - start}s elapsed",flush=True)
+
     return midi,songname
 
 # the previous midi track is used as the new prompy
-def modifyMidi(seed,tracks,oldMidi):
+def modifyMidi(ai,seed,tracks,oldMidi):
+
+    start = time.time()
 
     PATH = "."
     songname = f"{randint(0,9999):04d}"
     OUTDIR = "."
 
     tokenizer = "/model/aitextgen.tokenizer.json"
-    model_folder = "/model/MIDI_15"
+    model_folder = "/model/GPT_NEO"
 
 
     songname = oldMidi.split(".")[0]
@@ -78,7 +82,7 @@ def modifyMidi(seed,tracks,oldMidi):
 
     # convert midi to xml to abc
     converter.parseFile(oldMidi).write("musicxml",fp=xmlout)
-    command = ["python","xml2abc.py",xmlout,"-u","-o",OUTDIR]
+    command = ["python3","xml2abc.py",xmlout,"-u","-o",OUTDIR]
     subprocess.run(command)
 
     abcname = songname + ".abc"
@@ -100,7 +104,7 @@ def modifyMidi(seed,tracks,oldMidi):
 
     # print(prompt,flush=True)
 
-    ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer)
+    # ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer)
     text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9,seed=seed)
 
     # print(text,flush=True)
@@ -114,10 +118,12 @@ def modifyMidi(seed,tracks,oldMidi):
     # xml to midi pipeline
     xmlout = os.path.join(PATH,songname + ".xml")
     midiout = os.path.join(PATH,songname + ".mid")
-    command = ["python","abc2xml.py",abcfile,"-o",PATH]
+    command = ["python3","abc2xml.py",abcfile,"-o",PATH]
     process = subprocess.run(command)
 
     print("Converting xml to midi")
     midi = converter.parseFile(xmlout).write("midi",fp=midiout)
-    print(midi)
+    # print(midi)
+
+    print(f"{time.time() - start}s elapsed",flush=True)
     return midi,songname

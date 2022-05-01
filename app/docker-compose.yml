@@ -2,6 +2,13 @@ version: "3.8"  # optional since v1.27.0
 services:
   web:
     build: .
-    image: flask/midi-gen
+    image: flask/midi
     ports:
       - "5000:5000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
