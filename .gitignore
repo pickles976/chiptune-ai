@@ -1,3 +1,4 @@
+ALL_ABC
 NES_ABC
 NES_MIDI
 GB_ABC
@@ -20,6 +21,4 @@ test_songs
 *.jsonl
 *.musicxml
 *.bin
-lambda_1
-lambda_2
-lambda_3
+lambda

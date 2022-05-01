@@ -38,15 +38,21 @@ Copy the source HTML of the page to a file
     `
         python .\Utilities.py purgeXML [IN_DIR]
     `   
-5. Upload folders to Google Drive and run the Colab to create datasets   
-    `
-        https://colab.research.google.com/drive/1Qex7hxW-FCpxNJOZXUY0My83dqUHn7T3
-    `  
-    This step needs to be updated with a dedicated notebook
+5. Create datasets of appropriate length  
+    a. Upload your folder of .abc files to Google drive  
+    b. Open huggingface_train.ipynb in Google Colab  
+    c. Run the commands until your dataset is generated  
+    d. Save your dataset locally  
+    (note: sufficiently large datasets will need to be manually saved
+    with utf-8 encoding, as they will be created with ANSI encoding by default)
+
 
 ### Training
 
-https://colab.research.google.com/drive/1N8m1dL71Tj138g0NFbG32DcGLA9cYVoK
+1. Open up aitextgen_training.ipynb in Google Colab  
+2. Either train from scratch (this will generate a new model and tokenizeer) or--
+3. Continue training (Finetune)
+4. Once training is done, move your model into the /model/ folder in /app
 
 ### Deployment
 
@@ -55,10 +61,3 @@ https://colab.research.google.com/drive/1N8m1dL71Tj138g0NFbG32DcGLA9cYVoK
     docker-compose up
 `  
 in /app to run a Flask server
-
-2. Once your API has been fine-tuned, make adjustments to the  
-files in one of the lambda folders, each folder corresponds to a different  
-function
-
-3. Use the readme.md instructions to build and test, and run autodeploy.sh  
-to automatically deploy to ECR
