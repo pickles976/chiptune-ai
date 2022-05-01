@@ -1,4 +1,4 @@
-from requester import requestMidi
+from requester import requestMidi, modifyMidi
 from flask import Flask,redirect,request,send_file
 from flask_cors import CORS, cross_origin
 import io
@@ -54,7 +54,7 @@ def shuffleMidi():
 
     seed = int(request.form["seed"])
     midiString = request.form["midi"].split(",")[1] # remove prefixes
-    tracks = request.form["tracks"]
+    tracks = int(request.form["tracks"])
 
     app.logger.info(f"request received; seed: {seed}, tracks: {tracks}")
     app.logger.info(midiString)
@@ -66,6 +66,7 @@ def shuffleMidi():
         f.write(stringtoBase64(midiString))
 
     # use midi file to generate completions
+    midi,songname = modifyMidi(seed,tracks,newSong)
 
     # load midi file into memory
     with open(newSong,"rb") as f:

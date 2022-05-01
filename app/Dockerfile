@@ -16,6 +16,7 @@ RUN pip install --upgrade pip
 RUN pip3 install -r requirements.txt
 
 COPY ./abc2xml.py ./abc2xml.py
+COPY ./xml2abc.py ./xml2abc.py
 COPY ./main.py ./main.py
 COPY ./requester.py ./requester.py
 
