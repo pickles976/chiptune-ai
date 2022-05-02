@@ -1,11 +1,25 @@
-This is a project for creating NES-like chiptune music using  
-Natural Language Processing. This includes the data collection, normalization,  
-and model training-- as well as containers for locally developing and testing  
-different generation functions with Flask, and locally developing and testing  
-containers configured for AWS Lambda.
+# [Chiptune.app](https://www.chiptune.app)
+
+This is a project for creating NES-like chiptune music using Natural Language Processing. This includes the data collection, normalization, and model training-- as well as a Dockerfile for locally developing and testing different generation functions with Flask.
+
+Special thanks to [Max Woolf](https://github.com/minimaxir) for creating [aitextgen](https://github.com/minimaxir/aitextgen), which was much easier to configure and use than raw HuggingFace transformers.
+
+A majority of my data is from the [LAKH_MIDI dataset](https://colinraffel.com/projects/lmd/) which contains ~170k MIDI files. Also special thank you to [Chris Donahue](https://github.com/chrisdonahue) and the [LAKH_NES project](https://github.com/chrisdonahue/LakhNES) which I used for guidance throughout this project.
+
+# Running The Server
+
+## Deployment
+
+1. For testing and developing locally, you should use  
+`
+    docker-compose up
+`  
+in /app to run a Flask server
 
 
-### Getting the data
+# Making your own model
+
+## Getting the data
 
 1. Navigate to a page like:  
 `
@@ -25,7 +39,7 @@ Copy the source HTML of the page to a file
 
 (note: all of the data is already in /data_scraping)
 
-### Pre-Processing
+## Pre-Processing
 
 1. Run normalization steps:
     - Normalize the track numbers   
@@ -48,18 +62,9 @@ Copy the source HTML of the page to a file
     (note: sufficiently large datasets will need to be manually saved
     with utf-8 encoding, as they will be created with ANSI encoding by default)
 
-
-### Training
+## Training
 
 1. Open up aitextgen_training.ipynb in Google Colab  
 2. Either train from scratch (this will generate a new model and tokenizeer) or--
 3. Continue training (Finetune)
 4. Once training is done, move your model into the /model/ folder in /app
-
-### Deployment
-
-1. For testing and developing locally, you should use  
-`
-    docker-compose up
-`  
-in /app to run a Flask server
