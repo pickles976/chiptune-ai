@@ -2,6 +2,8 @@
 
 This is a project for creating NES-like chiptune music using Natural Language Processing. This includes the data collection, normalization, and model training-- as well as a Dockerfile for locally developing and testing different generation functions with Flask.
 
+The front-end is available [here](https://github.com/pickles976/chiptune-react)
+
 Special thanks to [Max Woolf](https://github.com/minimaxir) for creating [aitextgen](https://github.com/minimaxir/aitextgen), which was much easier to configure and use than raw HuggingFace transformers.
 
 A majority of my data is from the [LAKH_MIDI dataset](https://colinraffel.com/projects/lmd/) which contains ~170k MIDI files. Also special thank you to [Chris Donahue](https://github.com/chrisdonahue) and the [LAKH_NES project](https://github.com/chrisdonahue/LakhNES) which I used for guidance throughout this project.
