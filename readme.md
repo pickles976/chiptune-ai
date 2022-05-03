@@ -13,7 +13,11 @@ A majority of my data is from the [LAKH_MIDI dataset](https://colinraffel.com/pr
 ## Deployment
 
 1. Copy [this folder](https://drive.google.com/drive/folders/14Jv8KSieuQgUrQ6q-YUiqxPdkc9i9QcT?usp=sharing) into the app/model/ folder.  
-Rename it to "GPT_NEO"
+Rename it to "GPT_NEO"  
+(structure should look like:)  
+`
+    /app/model/GPT_NEO/pytorch_model.bin
+`
 
 2. Run
 `
