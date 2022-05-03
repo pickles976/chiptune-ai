@@ -10,6 +10,20 @@ from aitextgen import aitextgen
 import time
 
 channelMap = {0: "V:0", 1: "V:1", 2: "V:2", 3: "V:3",4: "V:4"}
+BASE_PROMPT="""X:1
+    T:Music21 Fragment
+    C:Music21
+    %%score 1 2 3 4
+    L:1/8
+    Q:1/4=180
+    M:4/4
+    I:linebreak $
+    K:none
+    V:1 treble nm="Sampler" snm="Samp"
+    V:2 treble nm="Sampler" snm="Samp"
+    V:3 bass nm="Bass" snm="Samp"
+    V:4 bass nm="Percussion" snm="Perc"
+    """
 
 def requestMidi(ai,seed):
 
@@ -19,20 +33,7 @@ def requestMidi(ai,seed):
     songname = f"{randint(0,9999):04d}"
     OUTDIR = "."
 
-    prompt=f"""X:1
-    T:Music21 Fragment
-    C:Music21
-    %%score 1 2 3 4
-    L:1/8
-    Q:1/4=180
-    M:4/4
-    I:linebreak $
-    K:none
-    V:1 treble nm="Brass" snm="Brs"
-    V:2 treble nm="Brass" snm="Brs"
-    V:3 bass nm="Fretless Bass" snm="Gtr"
-    V:4 bass nm="Percussion" snm="Perc"
-    """
+    prompt=BASE_PROMPT
 
     text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9,seed=seed)
 
@@ -86,28 +87,44 @@ def modifyMidi(ai,seed,tracks,oldMidi):
     subprocess.run(command)
 
     abcname = songname + ".abc"
-    prompt = ""
+    prompt=BASE_PROMPT
     marked = False
+    songstart = 0
 
     # read in the abc file
     with open(abcname,"r") as f:
         for line in f:
+
             first = line.split(" ")[0][0:3]
+
+            # mark how many times we've seen V:1
+            if first == "V:1":
+                songstart += 1
+
+            # stop the prompt at the specified channel
             if first == channelMap[tracks+1]:
 
-                # stop the prompt at the specified channel
+                # only save the indication that a new channel is starting
                 if marked:
                     prompt += first
+                    marked = False
                     break
                 marked = True
-            prompt += line
 
-    # print(prompt,flush=True)
+            # dont start addint to the prompt until we have passed the beginning part
+            if songstart > 1:
+                prompt += line
+
+    # if new channel marker is not present, add it
+    if marked:
+        prompt += channelMap[tracks+1]
+
+    print(prompt,flush=True)
 
     # ai = aitextgen(model_folder=model_folder,tokenizer_file=tokenizer)
     text = ai.generate_one(prompt=prompt,max_length=2048,temperature=0.9,seed=seed)
 
-    # print(text,flush=True)
+    print(text,flush=True)
 
     abcfile = os.path.join(PATH,songname + ".abc")
 
