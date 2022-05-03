@@ -12,11 +12,14 @@ A majority of my data is from the [LAKH_MIDI dataset](https://colinraffel.com/pr
 
 ## Deployment
 
-1. For testing and developing locally, you should use  
+1. Copy [this folder](https://drive.google.com/drive/folders/14Jv8KSieuQgUrQ6q-YUiqxPdkc9i9QcT?usp=sharing) into the app/model/ folder.  
+Rename it to "GPT_NEO"
+
+2. Run
 `
     docker-compose up
 `  
-in /app to run a Flask server
+in /app to run a Flask server. If it is your first time building then it will take a hot minute.
 
 
 # Making your own model
