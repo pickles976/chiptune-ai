@@ -77,3 +77,6 @@ Copy the source HTML of the page to a file
 2. Either train from scratch (this will generate a new model and tokenizeer) or--
 3. Continue training (Finetune)
 4. Once training is done, move your model into the /model/ folder in /app
+
+Updated Model:  
+https://drive.google.com/drive/folders/1d0HZ5QuW5Dq8xjdizsZK6aGoRZtYRTm6?usp=sharing
